@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 
-namespace Thorium_Threading
+namespace Thorium.Threading
 {
     public abstract class RestartableThreadClass
     {
