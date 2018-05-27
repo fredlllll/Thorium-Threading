@@ -28,19 +28,31 @@ namespace Thorium.Threading
             }
         }
 
-        public virtual void Stop()
+        public virtual void Stop(int joinTimeoutms = -1)
         {
+            Thread stopThread;
             lock(runThreadLock)
             {
-                if(runThread != null)
+                stopThread = runThread;
+                runThread = null;
+            }
+
+            if(stopThread != null)
+            {
+                stopThread.Interrupt();
+                if(Thread.CurrentThread != stopThread)
                 {
-                    runThread.Interrupt();
-                    if(Thread.CurrentThread != runThread)
-                    {
-                        runThread.Join();
-                    }
-                    runThread = null;
+                    stopThread.Join(joinTimeoutms);
                 }
+                stopThread = null;
+            }
+        }
+
+        public virtual void Join(int timeoutms = -1)
+        {
+            if(runThread != null)
+            {
+                runThread.Join(timeoutms);
             }
         }
 
