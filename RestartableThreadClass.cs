@@ -42,7 +42,10 @@ namespace Thorium.Threading
                 stopThread.Interrupt();
                 if(Thread.CurrentThread != stopThread)
                 {
-                    stopThread.Join(joinTimeoutms);
+                    if(!stopThread.Join(joinTimeoutms))
+                    {
+                        stopThread.Abort(); //abort if it doesnt exit in time
+                    }
                 }
                 stopThread = null;
             }
